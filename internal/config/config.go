@@ -14,3 +14,7 @@ func Load(path string) error {
 type HTTPConfig interface {
 	Address() string
 }
+
+type PGConfig interface {
+	Address() string
+}

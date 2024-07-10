@@ -1,12 +1,18 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/drizzleent/vortex/internal/service"
+	"github.com/gin-gonic/gin"
+)
 
 type handler struct {
+	s service.ApiService
 }
 
-func NewHandler() *handler {
-	return &handler{}
+func NewHandler(service service.ApiService) *handler {
+	return &handler{
+		s: service,
+	}
 }
 
 func (h *handler) InitRoutes() *gin.Engine {
@@ -14,7 +20,6 @@ func (h *handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/")
 	{
-		api.GET("/")
 		api.POST("/create", h.AddClient)
 		api.POST("/edit/:id", h.UpdateClient)
 		api.POST("/delete/:id", h.DeleteClient)

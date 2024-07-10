@@ -8,5 +8,6 @@ import (
 )
 
 func (h *handler) DeleteClient(c *gin.Context) {
+	h.s.DeleteClient()
 	api.NewErrorResponse(c, http.StatusOK, "del")
 }

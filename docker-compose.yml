@@ -5,19 +5,19 @@ volumes:
   postgres_volume:
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ps-app
-    ports:
-      - "${HTTP_PORT}:8080"
-    depends_on:
-      - pg_statuses
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: ps-app
+  #   ports:
+  #     - "${HTTP_PORT}:8080"
+  #   depends_on:
+  #     - pg_statuses
 
   pg_statuses:
     image: postgres:14-alpine3.17
-    container_name: ps-psql
+    container_name: cl-psql
     ports:
       - "${PG_PORT}:5432"
     environment:
@@ -28,7 +28,7 @@ services:
       - postgres_volume:/var/lib/postgresql/data
   
   migrator_pg:
-    container_name: ps-psqlMigrator
+    container_name: cl-psqlMigrator
     build:
       context: .
       dockerfile: migrations.Dockerfile
