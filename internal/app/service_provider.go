@@ -30,7 +30,7 @@ func newServiceProvider() *serviceProvider {
 }
 
 func (s *serviceProvider) PGConfig() config.HTTPConfig {
-	if nil == s.httpConfig {
+	if nil == s.pgConfig {
 		cfg, err := env.NewPGConfig()
 		if err != nil {
 			log.Fatalf("failed to get pg config: %s", err.Error())
@@ -55,7 +55,7 @@ func (s *serviceProvider) HTTPConfig() config.HTTPConfig {
 
 func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	if nil == s.dbClient {
-		cl, err := pg.New(ctx, s.pgConfig.Address())
+		cl, err := pg.New(ctx, s.PGConfig().Address())
 		if err != nil {
 			log.Fatalf("Failed to create db client %s", err.Error())
 		}
@@ -77,7 +77,7 @@ func (s *serviceProvider) ApiRepository(ctx context.Context) repository.ClientRe
 
 func (s *serviceProvider) ApiService(ctx context.Context) service.ApiService {
 	if nil == s.service {
-		s.service = clientsService.NewClientService()
+		s.service = clientsService.NewClientService(s.ApiRepository(ctx))
 	}
 	return s.service
 }

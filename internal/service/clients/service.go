@@ -6,6 +6,8 @@ type srv struct {
 	r repository.ClientRepository
 }
 
-func NewClientService() *srv {
-	return &srv{}
+func NewClientService(repo repository.ClientRepository) *srv {
+	return &srv{
+		r: repo,
+	}
 }

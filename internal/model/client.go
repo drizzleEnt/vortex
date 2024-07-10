@@ -4,13 +4,13 @@ import "time"
 
 type Client struct {
 	ID          int64
-	ClientName  string
-	Version     int
-	Image       string
-	CPU         string
-	Memory      string
-	Priority    float64
-	NeedRestart bool
+	ClientName  string  `json:"client_name"`
+	Version     int     `json:"version"`
+	Image       string  `json:"image"`
+	CPU         string  `json:"cpu"`
+	Memory      string  `json:"memory"`
+	Priority    float64 `json:"priority"`
+	NeedRestart bool    `json:"need_restart"`
 	SpawnedAt   time.Time
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

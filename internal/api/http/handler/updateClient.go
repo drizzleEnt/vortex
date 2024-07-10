@@ -8,6 +8,6 @@ import (
 )
 
 func (h *handler) UpdateClient(c *gin.Context) {
-	h.s.UpdateClient()
+	h.s.UpdateClient(c)
 	api.NewErrorResponse(c, http.StatusOK, "updateClient")
 }

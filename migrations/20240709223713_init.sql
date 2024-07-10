@@ -15,10 +15,11 @@ CREATE TABLE clients(
 CREATE TABLE AlgorithmStatus(
     id serial primary key,
     client_id INT REFERENCES clients (id) ON DELETE CASCADE NOT NULL,
+    VWAP BOOLEAN NOT NULL DEFAULT FALSE,
     TWAP BOOLEAN NOT NULL DEFAULT FALSE,
     HFT BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- +goose Down
-DROP TABLE clients;
 DROP TABLE AlgorithmStatus;
+DROP TABLE clients;

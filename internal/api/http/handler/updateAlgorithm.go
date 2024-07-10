@@ -8,6 +8,6 @@ import (
 )
 
 func (h *handler) UpdateAlgorithmStatus(c *gin.Context) {
-	h.s.UpdateAlgorithmStatus()
+	h.s.UpdateAlgorithmStatus(c)
 	api.NewErrorResponse(c, http.StatusOK, "updateAlgo")
 }

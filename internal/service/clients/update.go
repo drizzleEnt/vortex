@@ -1,5 +1,7 @@
 package clients
 
-func (s *srv) UpdateClient() {
-	s.r.UpdateClient()
+import "context"
+
+func (s *srv) UpdateClient(ctx context.Context) {
+	s.r.UpdateClient(ctx)
 }

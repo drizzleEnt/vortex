@@ -1,5 +1,7 @@
 package clients
 
-func (s *srv) UpdateAlgorithmStatus() {
-	s.r.UpdateAlgorithmStatus()
+import "context"
+
+func (s *srv) UpdateAlgorithmStatus(ctx context.Context) {
+	s.r.UpdateAlgorithmStatus(ctx)
 }
