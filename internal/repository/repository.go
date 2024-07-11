@@ -12,3 +12,7 @@ type ClientRepository interface {
 	UpdateClient(context.Context, int64, *model.Client) error
 	UpdateAlgorithmStatus(context.Context, int64, *model.Algorithms) error
 }
+
+type DeployerRepository interface {
+	GetActiveList(context.Context) ([]int64, error)
+}

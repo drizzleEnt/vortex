@@ -4,14 +4,17 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/drizzleent/vortex/internal/config"
+	"github.com/drizzleent/vortex/internal/deployer"
 )
 
 type App struct {
 	serviceProvider *serviceProvider
 	httpServer      *http.Server
+	deployer        *deployer.Deployer
 }
 
 func New(ctx context.Context) (*App, error) {
@@ -24,10 +27,29 @@ func New(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Run() error {
-	err := a.runHTTPServer()
-	if err != nil {
-		return err
-	}
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+
+		err := a.runHTTPServer()
+		if err != nil {
+			log.Fatalf("failed to run HTTP server: %v", err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		err := a.runDeployer()
+		if err != nil {
+			log.Fatalf("failed to run Deployer: %v", err)
+		}
+	}()
+
+	wg.Wait()
+
 	return nil
 }
 
@@ -35,6 +57,7 @@ func (a *App) initDebs(ctx context.Context) error {
 	inits := []func(context.Context) error{
 		a.initConfig,
 		a.initServiceProvider,
+		a.initDeployer,
 		a.initHTTPServer,
 	}
 
@@ -63,6 +86,11 @@ func (a *App) initServiceProvider(_ context.Context) error {
 	return nil
 }
 
+func (a *App) initDeployer(ctx context.Context) error {
+	a.deployer = a.serviceProvider.Deployer(ctx)
+	return nil
+}
+
 func (a *App) initHTTPServer(ctx context.Context) error {
 	srv := &http.Server{
 		Addr:           a.serviceProvider.HTTPConfig().Address(),
@@ -84,5 +112,10 @@ func (a *App) runHTTPServer() error {
 		return err
 	}
 
+	return nil
+}
+
+func (a *App) runDeployer() error {
+	a.deployer.Run()
 	return nil
 }

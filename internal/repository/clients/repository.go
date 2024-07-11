@@ -126,7 +126,6 @@ func (r *repo) UpdateClient(ctx context.Context, ID int64, info *model.Client) e
 	}
 
 	return nil
-	return nil
 }
 
 func (r *repo) UpdateAlgorithmStatus(ctx context.Context, ID int64, info *model.Algorithms) error {

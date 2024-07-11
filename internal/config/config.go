@@ -1,6 +1,10 @@
 package config
 
-import "github.com/subosito/gotenv"
+import (
+	"time"
+
+	"github.com/subosito/gotenv"
+)
 
 func Load(path string) error {
 	err := gotenv.Load(path)
@@ -17,4 +21,8 @@ type HTTPConfig interface {
 
 type PGConfig interface {
 	Address() string
+}
+
+type DeployerConfig interface {
+	Duration() time.Duration
 }
