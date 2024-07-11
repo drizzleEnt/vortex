@@ -34,7 +34,7 @@ func FromRequestToModel(c *gin.Context) (*model.Client, int, error) {
 func FromRequestToID(c *gin.Context) (int, int, error) {
 	key := c.Param(id)
 	if len(key) == 0 {
-		return 0, http.StatusBadRequest, errors.New("patient id is requared")
+		return 0, http.StatusBadRequest, errors.New("client id is requared")
 	}
 
 	id, err := strconv.Atoi(key)
@@ -42,4 +42,15 @@ func FromRequestToID(c *gin.Context) (int, int, error) {
 		return 0, http.StatusBadRequest, errors.New("client id is requared")
 	}
 	return id, http.StatusOK, nil
+}
+
+func FromRequestToAlgorithms(c *gin.Context) (*model.Algorithms, int, error) {
+	var algos model.Algorithms
+
+	err := c.Bind(&algos)
+	if err != nil {
+		return nil, http.StatusInternalServerError, err
+	}
+
+	return &algos, http.StatusOK, nil
 }
