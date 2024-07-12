@@ -26,13 +26,20 @@ func (d *Deployer) Run() error {
 		time.Sleep(d.d * time.Second)
 
 		ctx := context.Background()
-		res, err := d.service.GetActiveList(ctx)
+		resActive, resInactive, err := d.service.GetActiveList(ctx)
 
 		if err != nil {
 			return err
 		}
 
-		for _, v := range res {
+		for _, v := range resInactive {
+			err := d.service.DeletePod(strconv.FormatInt(v, 10))
+			if err != nil {
+				return err
+			}
+		}
+
+		for _, v := range resActive {
 
 			err := d.service.CreatePod(strconv.FormatInt(v, 10))
 			if err != nil {
@@ -45,6 +52,6 @@ func (d *Deployer) Run() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(list)
+		fmt.Println("active clients id", list)
 	}
 }

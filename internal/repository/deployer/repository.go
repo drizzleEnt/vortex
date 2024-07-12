@@ -25,8 +25,8 @@ func NewRepository(db db.Client) *repo {
 	}
 }
 
-func (r *repo) GetActiveList(ctx context.Context) ([]int64, error) {
-	builderSelect := sq.Select(client_id).
+func (r *repo) GetActiveList(ctx context.Context) ([]int64, []int64, error) {
+	builderSelectActive := sq.Select(client_id).
 		From(tableAlgo).
 		PlaceholderFormat(sq.Dollar).
 		Where(sq.Or{
@@ -34,20 +34,43 @@ func (r *repo) GetActiveList(ctx context.Context) ([]int64, error) {
 			sq.Eq{twapColumn: true},
 			sq.Eq{hftColumn: true}})
 
-	query, args, err := builderSelect.ToSql()
+	query, args, err := builderSelectActive.ToSql()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	q := db.Query{
 		Name:     "repository.GetActiveList",
 		QueryRaw: query,
 	}
-	res := make([]int64, 1)
-	err = r.db.DB().ScanAllContext(ctx, &res, q, args...)
+	resActive := make([]int64, 1)
+	err = r.db.DB().ScanAllContext(ctx, &resActive, q, args...)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return res, nil
+	builderSelectInactive := sq.Select(client_id).
+		From(tableAlgo).
+		PlaceholderFormat(sq.Dollar).
+		Where(
+			sq.Eq{vwapColumn: false,
+				twapColumn: false,
+				hftColumn:  false})
+
+	query, args, err = builderSelectInactive.ToSql()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	q = db.Query{
+		Name:     "repository.GetActiveList",
+		QueryRaw: query,
+	}
+	resInactive := make([]int64, 1)
+	err = r.db.DB().ScanAllContext(ctx, &resInactive, q, args...)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return resActive, resInactive, nil
 }

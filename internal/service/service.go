@@ -17,5 +17,5 @@ type Deployer interface {
 	CreatePod(name string) error
 	DeletePod(name string) error
 	GetPodList() ([]string, error)
-	GetActiveList(context.Context) ([]int64, error)
+	GetActiveList(context.Context) ([]int64, []int64, error)
 }

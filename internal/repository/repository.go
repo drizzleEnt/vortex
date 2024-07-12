@@ -14,5 +14,5 @@ type ClientRepository interface {
 }
 
 type DeployerRepository interface {
-	GetActiveList(context.Context) ([]int64, error)
+	GetActiveList(context.Context) ([]int64, []int64, error)
 }
